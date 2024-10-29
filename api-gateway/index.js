@@ -1,16 +1,18 @@
 const express = require("express");
 const app = express();
 const { createProxyMiddleware } = require("http-proxy-middleware");
-const port = 8000;
+require("dotenv").config();
+
+const PORT = process.env.PORT || 8000;
 
 const routes = {
-  "/users": "http://localhost:8001",
-  "/products": "http://localhost:8002",
+  "/users": process.env.USER_SERVICE_URL,
+  "/products": process.env.PRODUCTS_SERVICE_URL,
 };
 
 for (const route in routes) {
   const target = routes[route];
-  console.log(target,'>>>>>>>>>>>>')
+  console.log(process.env.USER_SERVICE_URL, ">>>>>>>>>>>>");
   app.use(
     route,
     createProxyMiddleware({
@@ -26,6 +28,6 @@ for (const route in routes) {
 //   pathRewrite: { '^/users': "" },
 // }))
 
-app.listen(port, () =>
-  console.log(`API gateway running on http://localhost:${port}`)
+app.listen(PORT, () =>
+  console.log(`API gateway running on http://localhost:${PORT}`)
 );
